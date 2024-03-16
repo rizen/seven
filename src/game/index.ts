@@ -5,6 +5,7 @@ import {
   Game,
 } from '@boardzilla/core';
 import { cards } from './cards.js';
+import { scorePlayer } from './scoring.js';
 
 export class SevenPlayer extends Player<SevenPlayer, MyGame> {
   score = 0;
@@ -30,44 +31,89 @@ export default createGame(SevenPlayer, MyGame, game => {
   game.registerClasses(Card);
 
   game.create(Space, 'mess');
-  //$.mess.onEnter(Card, t => t.hideFromAll());
+  $.mess.onEnter(Card, t => t.hideFromAll());
   for (const card of cards) {
     $.mess.createMany(card.quantity!, Card, card.name!, card);
   }
 
   for (const player of game.players) {
     const hand = game.create(Space, 'hand', { player });
-    //hand.onEnter(Card, c => c.showOnlyTo(player.position));
+    hand.onEnter(Card, c => c.showOnlyTo(player.position));
     const discard = game.create(Space, 'discard', { player });
-    //discard.onEnter(Card, c => c.showToAll());
+    discard.onEnter(Card, c => c.showToAll());
   }
 
   game.defineActions({
-    drawCard: player => action({ prompt: 'Draw a card' })
+    drawCards: player => action({ prompt: 'Draw 2 cards' })
       .chooseOnBoard('card', $.mess.all(Card))
-      .move('card', player.my('hand')!),
+      .move('card', player.my('hand')!)
+      .chooseOnBoard('card2', $.mess.all(Card))
+      .move('card2', player.my('hand')!),
     discardCard: player => action({ prompt: 'Discard a card' })
       .chooseOnBoard('card', player.my('hand')!.all(Card))
       .move('card', player.my('discard')!),
+    discardDown: player => action({ prompt: 'Choose 3 cards to discard' })
+      .chooseGroup({
+        'card1': ['board', player.my('hand')!.all(Card)],
+        'card2': ['board', player.my('hand')!.all(Card)],
+        'card3': ['board', player.my('hand')!.all(Card)],
+      }, {
+        confirm: 'Are you sure these are the 3 you want to discard?',
+      })
+      .move('card1', player.my('discard')!)
+      .move('card2', player.my('discard')!)
+      .move('card3', player.my('discard')!),
   });
+
+
+  const determineWinner = () => {
+    let highestPlayer: SevenPlayer | undefined = undefined;
+    let highestScore = 0;
+    for (const player of game.players) {
+      if (player.score > highestScore) {
+        highestPlayer = player;
+        highestScore = player.score;
+      }
+      else if (player.score == highestScore) {
+        highestPlayer = undefined;
+      }
+      console.log(player.name, player.score)
+    }
+    game.finish(highestPlayer);
+  }
 
   game.defineFlow(
     () => {
       $.mess.shuffle();
+      game.round = 7;
       for (const player of game.players) {
-        $.mess.firstN(3, Card).putInto(player.my('hand')!)
+        $.mess.firstN(9, Card).putInto(player.my('hand')!)
       }
     },
     whileLoop({
       while: () => game.round < 8,
-      do: loop(
-        everyPlayer({
-          do: playerActions({ actions: ['drawCard'] })
-        }),
+      do: (
+        [() => {
+          for (const player of game.players) {
+            $.mess.firstN(2, Card).putInto(player.my('hand')!)
+          }
+        },
         everyPlayer({
           do: playerActions({ actions: ['discardCard'] })
         }),
+        () => {
+          game.round++;
+        }]
       )
     }),
+    playerActions({ actions: ['discardDown'] }),
+    () => {
+      for (const player of game.players) {
+        scorePlayer(player);
+      }
+      determineWinner();
+    },
   );
+
 });
+
