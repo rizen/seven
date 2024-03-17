@@ -11,7 +11,7 @@ export class SevenPlayer extends Player<SevenPlayer, MyGame> {
   score = 0;
 };
 
-class MyGame extends Game<SevenPlayer, MyGame> {
+export class MyGame extends Game<SevenPlayer, MyGame> {
   round = 1;
 }
 
@@ -104,7 +104,7 @@ export default createGame(SevenPlayer, MyGame, game => {
     playerActions({ actions: ['discardDown'] }),
     () => {
       for (const player of game.players) {
-        scorePlayer(player);
+        scorePlayer(player, game);
       }
       determineWinner();
     },
