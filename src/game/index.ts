@@ -45,36 +45,23 @@ export default createGame(SevenPlayer, MyGame, game => {
 
   game.defineActions({
     drawCards: player => action({ prompt: 'Draw 2 cards' })
-      .chooseOnBoard('card', $.mess.all(Card))
-      .move('card', player.my('hand')!)
-      .chooseOnBoard('card2', $.mess.all(Card))
-      .move('card2', player.my('hand')!),
+      .chooseOnBoard('cards', $.mess.all(Card), {
+        number: 2,
+      })
+      .move('cards', player.my('hand')!),
     discardCard: player => action({ prompt: 'Discard a card' })
       .chooseOnBoard('card', player.my('hand')!.all(Card))
       .move('card', player.my('discard')!),
-    discardDown: player => action({ prompt: 'Choose 3 cards to discard' })
-      // .chooseOnBoard("cards", () => player.my("hand")!.all(Card), {
+    discardDown: player => action({ prompt: 'Choose 3 cards to discard, black cards discarded will score' })
       .chooseOnBoard('cards', player.my('hand')!.all(Card), {
         number: 3,
         confirm: 'Are you sure these are the 3 you want to discard?',
       })
-      .do(({ cards }) => cards.forEach((c) => c.putInto(player.my('discard')!))),
-    //.move('cards', player.my('discard')!),
-
-    /* // from hearts
-    .chooseOnBoard("cards", () => player.my("hand")!.all(Card), {
-      number: 3,
-    })
-    .do(({ cards }) =>
-      cards.forEach((c) =>
-        c.putInto(
-          game.players
-            .seatedNext(player, (game.round) + 1)
-            .my("discard")!
-        )
-      )
-    )
-    */
+      .do(({ cards }) => cards.forEach((c) => {
+        if (c.color == 'black')
+          player.score++;
+      }))
+      .move('cards', player.my('discard')!),
   });
 
 
@@ -118,7 +105,9 @@ export default createGame(SevenPlayer, MyGame, game => {
         }]
       )
     }),
-    playerActions({ actions: ['discardDown'] }),
+    everyPlayer({
+      do: playerActions({ actions: ['discardDown'] })
+    }),
     () => {
       for (const player of game.players) {
         scorePlayer(player, game);
