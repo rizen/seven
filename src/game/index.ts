@@ -53,11 +53,28 @@ export default createGame(SevenPlayer, MyGame, game => {
       .chooseOnBoard('card', player.my('hand')!.all(Card))
       .move('card', player.my('discard')!),
     discardDown: player => action({ prompt: 'Choose 3 cards to discard' })
+      // .chooseOnBoard("cards", () => player.my("hand")!.all(Card), {
       .chooseOnBoard('cards', player.my('hand')!.all(Card), {
         number: 3,
         confirm: 'Are you sure these are the 3 you want to discard?',
       })
-      .move('cards', player.my('discard')!),
+      .do(({ cards }) => cards.forEach((c) => c.putInto(player.my('discard')!))),
+    //.move('cards', player.my('discard')!),
+
+    /* // from hearts
+    .chooseOnBoard("cards", () => player.my("hand")!.all(Card), {
+      number: 3,
+    })
+    .do(({ cards }) =>
+      cards.forEach((c) =>
+        c.putInto(
+          game.players
+            .seatedNext(player, (game.round) + 1)
+            .my("discard")!
+        )
+      )
+    )
+    */
   });
 
 
