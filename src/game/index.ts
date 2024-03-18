@@ -13,6 +13,7 @@ export class SevenPlayer extends Player<SevenPlayer, MyGame> {
 
 export class MyGame extends Game<SevenPlayer, MyGame> {
   round = 1;
+  match = 1;
 }
 
 const { Space, Piece } = createGameClasses<SevenPlayer, MyGame>();
@@ -30,6 +31,7 @@ export default createGame(SevenPlayer, MyGame, game => {
 
   game.registerClasses(Card);
 
+  game.create(Space, 'scoreboard');
   game.create(Space, 'mess');
   $.mess.onEnter(Card, t => t.hideFromAll());
   for (const card of cards) {
@@ -82,39 +84,49 @@ export default createGame(SevenPlayer, MyGame, game => {
   }
 
   game.defineFlow(
-    () => {
-      $.mess.shuffle();
-      game.round = 7;
-      for (const player of game.players) {
-        $.mess.firstN(9, Card).putInto(player.my('hand')!)
-      }
-    },
     whileLoop({
-      while: () => game.round < 8,
-      do: (
-        [() => {
+      while: () => game.match < 4,
+      do: [
+        () => {
+          $.mess.shuffle();
+          game.round = 7;
           for (const player of game.players) {
-            $.mess.firstN(2, Card).putInto(player.my('hand')!)
+            $.mess.firstN(9, Card).putInto(player.my('hand')!)
           }
         },
+        whileLoop({
+          while: () => game.round < 8,
+          do: [
+            () => {
+              for (const player of game.players) {
+                $.mess.firstN(2, Card).putInto(player.my('hand')!)
+              }
+            },
+            everyPlayer({
+              do: playerActions({ actions: ['discardCard'] })
+            }),
+            () => {
+              game.round++;
+            }
+          ]
+        }),
         everyPlayer({
-          do: playerActions({ actions: ['discardCard'] })
+          do: playerActions({ actions: ['discardDown'] })
         }),
         () => {
-          game.round++;
-        }]
-      )
-    }),
-    everyPlayer({
-      do: playerActions({ actions: ['discardDown'] })
+          for (const player of game.players) {
+            scorePlayer(player, game);
+            player.my('hand')!.all().putInto($.mess);
+            player.my('discard')!.all().putInto($.mess);
+          }
+          game.match++
+        }
+      ]
     }),
     () => {
-      for (const player of game.players) {
-        scorePlayer(player, game);
-      }
       determineWinner();
     },
-  );
+  ); // end flow
 
 });
 
