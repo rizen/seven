@@ -1,8 +1,9 @@
 import type { SevenPlayer, MyGame } from './index.js';
 import { Card } from './index.js';
 
-const sortByValue = (hand: Card[]) => {
-    return hand.sort((a, b) => {
+export const sortByValue = (hand: any[]) => {
+    const copy = JSON.parse(JSON.stringify(hand)) as any[];
+    return copy.sort((a, b) => {
         if (a.value > b.value) {
             return 1;
         }
@@ -13,8 +14,9 @@ const sortByValue = (hand: Card[]) => {
     });
 }
 
-const sortByColor = (hand: Card[]) => {
-    return hand.sort((a, b) => {
+export const sortByColor = (hand: any[]) => {
+    const copy = JSON.parse(JSON.stringify(hand)) as any[];
+    return copy.sort((a, b) => {
         if (a.color > b.color) {
             return 1;
         }
@@ -25,7 +27,7 @@ const sortByColor = (hand: Card[]) => {
     });
 }
 
-const scoreRunOf7In1Color = (hand: Card[]) => {
+export const scoreRunOf7In1Color = (hand: any[]) => {
     if (score7Card1Color(hand) == 0)
         return 0;
     if (scoreRunOf7(hand) == 0)
@@ -33,21 +35,21 @@ const scoreRunOf7In1Color = (hand: Card[]) => {
     return 7;
 }
 
-const scoreSetOf7 = (hand: Card[]) => {
+export const scoreSetOf7 = (hand: any[]) => {
     const sorted = sortByValue(hand);
     if (sorted[0].value == sorted[6].value)
         return 6;
     return 0;
 }
 
-const score7Card1Color = (hand: Card[]) => {
+export const score7Card1Color = (hand: any[]) => {
     const sorted = sortByColor(hand)
     if (sorted[0].color == sorted[6].color)
         return 5;
     return 0;
 }
 
-const scoreSetOf5AndSetOf2 = (hand: Card[]) => {
+export const scoreSetOf5AndSetOf2 = (hand: any[]) => {
     const sorted = sortByValue(hand);
     if (
         (sorted[0].value == sorted[1].value && sorted[2].value == sorted[6].value)
@@ -58,39 +60,43 @@ const scoreSetOf5AndSetOf2 = (hand: Card[]) => {
     return 0;
 }
 
-const scoreRunOf7 = (hand: Card[]) => {
+export const scoreRunOf7 = (hand: any[]) => {
     const sorted = sortByValue(hand);
     if (sorted.every((card, index) => card.value == index + 1))
         return 3;
     return 0;
 }
 
-const scoreSetsAndRuns = (hand: Card[]) => {
+export const scoreSetsAndRuns = (hand: any[]) => {
     if (hand.every((card) => card.value == '+1'))
         return 0;
-    const sorted = sortByValue(hand);
-    let startOfRun = 0;
-    let index = 0;
-    let lastValue = 0;
-    for (const card of sorted) {
-        if (lastValue != card.value) {
-            //@ts-ignore
-            lastValue = card.value;
-            startOfRun = index;
+    let sorted = sortByValue(hand);
+
+    // remove pairs
+    let previous = undefined;
+    let pairs = 0;
+    for (let index = hand.length - 1; index >= 0; index--) {
+        if (sorted[index].value == previous) {
+            sorted.splice(index, 2)
+            previous = undefined;
+            pairs++;
         }
-        if (startOfRun - index == 3)
-            break;
-        index++;
+        else {
+            previous = sorted[index].value
+        }
     }
-    if (startOfRun - index < 3)
+    if (pairs != 2)
         return 0;
-    const remainder = sorted.splice(startOfRun, 3);
-    if (remainder[0].value == remainder[1].value && remainder[2].value == remainder[3].value)
+
+    // test for run
+    if (sorted[0].value + 1 == sorted[1].value && sorted[1].value + 1 == sorted[2].value)
         return 2;
+
+    // no joy
     return 0;
 }
 
-const scoreEvenOrOdd = (hand: Card[]) => {
+export const scoreEvenOrOdd = (hand: any[]) => {
     if (hand.every((card) => card.value == '+1'))
         return 0;
     //@ts-ignore
