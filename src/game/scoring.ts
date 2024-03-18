@@ -161,5 +161,5 @@ export const scorePlayer = (player: SevenPlayer, game: MyGame) => {
         }
     }
     if (bonus)
-        game.message(`${player.name} has scored ${bonus} point${bonus == 1 ? 's' : ''}.`);
+        game.message(`${player.name} has scored ${bonus} bonus point${bonus == 1 ? 's' : ''}.`);
 }
