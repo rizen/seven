@@ -42,6 +42,13 @@ render(setup, {
       ),
     });
 
+    $.mess.layout(Card, {
+      columns: 1,
+      offsetRow: { x: 4, y: 2 },
+      scaling: 'fit',
+      limit: 10,
+    });
+
 
   }
 });
