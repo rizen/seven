@@ -16,7 +16,7 @@ export class MyGame extends Game<SevenPlayer, MyGame> {
   match = 1;
 }
 
-const { Space, Piece } = createGameClasses<SevenPlayer, MyGame>();
+export const { Space, Piece } = createGameClasses<SevenPlayer, MyGame>();
 
 export class Card extends Piece {
   color: 'purple' | 'blue' | 'red' | 'green' | 'black'

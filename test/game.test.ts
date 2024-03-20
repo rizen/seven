@@ -15,9 +15,13 @@ test('allows you to take turns', () => {
     settings: {}
   });
 
+  expect(runner.server.game.round).toBe(7);
+
+  //console.log(runner.server.game.players.current())
+
   // the next 2 lines shouldn't be right, but bz thinks they are, there should be an action for player 1
-  expect(p1.actions()).toStrictEqual([])
-  expect(p2.actions()).toStrictEqual([])
+  expect(p1.actions()).toStrictEqual(['discardCard'])
+  expect(p2.actions()).toStrictEqual(['discardCard'])
 
   // no idea what to do below given what's happening above
   /*
