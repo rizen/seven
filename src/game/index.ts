@@ -40,7 +40,10 @@ export default createGame(SevenPlayer, MyGame, game => {
 
   for (const player of game.players) {
     const hand = game.create(Space, 'hand', { player });
-    hand.onEnter(Card, c => c.showOnlyTo(player.position));
+    hand.onEnter(Card, c => {
+      c.showOnlyTo(player.position);
+      hand.sortBy('name');
+    });
     const discard = game.create(Space, 'discard', { player });
     discard.onEnter(Card, c => c.showToAll());
   }
