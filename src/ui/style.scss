@@ -3,13 +3,15 @@
     .Card {
 
         perspective: 1000px;
+        border: 0.02em solid black;
+        border-radius: 0.4em;
 
         &.selectable {
-            border: blue 2px solid;
+            border: gold 0.2em solid;
         }
 
         &.selected {
-            border: red 5px solid;
+            border: gold 0.2em dashed;
         }
 
         background-size: cover;
