@@ -1,26 +1,13 @@
 import type { SevenPlayer, MyGame } from './index.js';
 import { Card } from './index.js';
 
-export const sortByValue = (hand: any[]) => {
+export const sortBy = (what: string | number, hand: any[]) => {
     const copy = JSON.parse(JSON.stringify(hand)) as any[];
     return copy.sort((a, b) => {
-        if (a.value > b.value) {
+        if (a[what] > b[what]) {
             return 1;
         }
-        if (a.value < b.value) {
-            return -1;
-        }
-        return 0;
-    });
-}
-
-export const sortByColor = (hand: any[]) => {
-    const copy = JSON.parse(JSON.stringify(hand)) as any[];
-    return copy.sort((a, b) => {
-        if (a.color > b.color) {
-            return 1;
-        }
-        if (a.color < b.color) {
+        if (a[what] < b[what]) {
             return -1;
         }
         return 0;
@@ -36,21 +23,21 @@ export const scoreRunOf7In1Color = (hand: any[]) => {
 }
 
 export const scoreSetOf7 = (hand: any[]) => {
-    const sorted = sortByValue(hand);
+    const sorted = sortBy('value', hand);
     if (sorted[0].value == sorted[6].value)
         return 6;
     return 0;
 }
 
 export const score7Card1Color = (hand: any[]) => {
-    const sorted = sortByColor(hand)
+    const sorted = sortBy('color', hand)
     if (sorted[0].color == sorted[6].color)
         return 5;
     return 0;
 }
 
 export const scoreSetOf5AndSetOf2 = (hand: any[]) => {
-    const sorted = sortByValue(hand);
+    const sorted = sortBy('value', hand);
     if (
         (sorted[0].value == sorted[1].value && sorted[2].value == sorted[6].value)
         ||
@@ -61,7 +48,7 @@ export const scoreSetOf5AndSetOf2 = (hand: any[]) => {
 }
 
 export const scoreRunOf7 = (hand: any[]) => {
-    const sorted = sortByValue(hand);
+    const sorted = sortBy('value', hand);
     if (sorted.every((card, index) => card.value == index + 1))
         return 3;
     return 0;
@@ -70,12 +57,30 @@ export const scoreRunOf7 = (hand: any[]) => {
 export const scoreSetsAndRuns = (hand: any[]) => {
     if (hand.every((card) => card.value == '+1'))
         return 0;
-    let sorted = sortByValue(hand);
+    let sorted = sortBy('value', hand);
+
+    // find and remove set of 3
+    const largest: Record<number, number> = {};
+    for (const card of sorted) {
+        if (card.value in largest)
+            largest[card.value]++;
+        else
+            largest[card.value] = 1;
+    }
+    let setOf3 = false;
+    for (const value of [1, 2, 3, 4, 5, 6, 7]) {
+        if (largest[value] == 7 || largest[value] == 5 || largest[value] == 3) {
+            const index = sorted.findIndex(card => card.value == value);
+            sorted.splice(index, 3);
+            setOf3 = true;
+            break;
+        }
+    }
 
     // remove pairs
     let previous = undefined;
     let pairs = 0;
-    for (let index = hand.length - 1; index >= 0; index--) {
+    for (let index = sorted.length - 1; index >= 0; index--) {
         if (sorted[index].value == previous) {
             sorted.splice(index, 2)
             previous = undefined;
@@ -88,8 +93,18 @@ export const scoreSetsAndRuns = (hand: any[]) => {
     if (pairs != 2)
         return 0;
 
+    // test all sets
+    if (setOf3)
+        return 2;
+
     // test for run
     if (sorted[0].value + 1 == sorted[1].value && sorted[1].value + 1 == sorted[2].value)
+        return 2;
+
+    /// TODO: we're currently taking the set of 3 out as one of the pairs and that's costing the test for the set of 3 to fail
+
+    // test for set of 3
+    if (sorted[0].value == sorted[1].value && sorted[1].value == sorted[2].value)
         return 2;
 
     // no joy
@@ -108,6 +123,7 @@ export const scoreEvenOrOdd = (hand: any[]) => {
 
 export const scorePlayer = (player: SevenPlayer, game: MyGame) => {
     const hand = player.my('hand')?.all(Card) || [];
+    console.log(player.name, hand.map(card => card.name))
     let score = scoreRunOf7In1Color(hand);
     if (score) {
         player.score += score;
