@@ -119,7 +119,6 @@ export const scoreEvenOrOdd = (hand: any[]) => {
 
 export const scorePlayer = (player: SevenPlayer, game: MyGame) => {
     const hand = player.my('hand')?.all(Card) || [];
-    console.log(player.name, hand.map(card => card.name))
     let score = scoreRunOf7In1Color(hand);
     if (score) {
         player.score += score;
