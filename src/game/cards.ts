@@ -28,7 +28,7 @@ export const cards: Partial<Card>[] = [
     {
         name: 'red5',
         color: 'red',
-        value: 1,
+        value: 5,
         quantity: 4,
     },
     {
@@ -70,7 +70,7 @@ export const cards: Partial<Card>[] = [
     {
         name: 'green5',
         color: 'green',
-        value: 1,
+        value: 5,
         quantity: 4,
     },
     {
@@ -112,7 +112,7 @@ export const cards: Partial<Card>[] = [
     {
         name: 'blue5',
         color: 'blue',
-        value: 1,
+        value: 5,
         quantity: 4,
     },
     {
@@ -154,7 +154,7 @@ export const cards: Partial<Card>[] = [
     {
         name: 'purple5',
         color: 'purple',
-        value: 1,
+        value: 5,
         quantity: 4,
     },
     {
