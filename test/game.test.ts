@@ -16,10 +16,10 @@ test('allows you to take turns', () => {
     settings: {}
   });
 
-  expect(runner.server.game.round).toBe(7);
+  expect(runner.server.game.round).toBe(1);
 
-  expect(p1.player.my('hand')?.all(Card).length).toBe(11);
-  expect(p2.player.my('hand')?.all(Card).length).toBe(11);
+  expect(p1.player.my('hand')?.all(Card).length).toBe(5);
+  expect(p2.player.my('hand')?.all(Card).length).toBe(5);
 
   expect(p1.actions()).toStrictEqual(['discardCard']);
   expect(p2.actions()).toStrictEqual(['discardCard']);
@@ -30,7 +30,7 @@ test('allows you to take turns', () => {
     card: p1.player.my('hand')!.last(Card)!
   });
 
-  expect(p1.player.my('hand')?.all(Card).length).toBe(10);
+  expect(p1.player.my('hand')?.all(Card).length).toBe(4);
 
   expect(p1.actions()).toStrictEqual([]);
   expect(p2.actions()).toStrictEqual(['discardCard']);
@@ -41,7 +41,19 @@ test('allows you to take turns', () => {
     card: p2.player.my('hand')!.last(Card)!
   });
 
+  while (p2.actions()[0] == 'discardCard') {
+    p1.move('discardCard', {
+      //@ts-ignore
+      card: p1.player.my('hand')!.last(Card)!
+    });
+    p2.move('discardCard', {
+      //@ts-ignore
+      card: p2.player.my('hand')!.last(Card)!
+    });
+  }
+
   expect(p2.player.my('hand')?.all(Card).length).toBe(10);
+
 
   expect(p1.actions()).toStrictEqual(['discardDown']);
   expect(p2.actions()).toStrictEqual(['discardDown']);
@@ -61,10 +73,10 @@ test('allows you to take turns', () => {
     cards: p2.player.my('hand')!.firstN(3, Card)!
   });
 
-  expect(p2.player.my('hand')?.all(Card).length).toBe(11);
+  expect(p2.player.my('hand')?.all(Card).length).toBe(3);
 
-  expect(p1.actions()).toStrictEqual(['discardCard'])
-  expect(p2.actions()).toStrictEqual(['discardCard'])
+  expect(p1.actions()).toStrictEqual(['discardDown'])
+  expect(p2.actions()).toStrictEqual(['discardDown'])
 
 
 });

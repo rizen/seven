@@ -92,9 +92,8 @@ export default createGame(SevenPlayer, MyGame, game => {
       do: [
         () => {
           $.mess.shuffle();
-          game.round = 7;
           for (const player of game.players) {
-            $.mess.firstN(9, Card).putInto(player.my('hand')!)
+            $.mess.firstN(3, Card).putInto(player.my('hand')!)
           }
         },
         whileLoop({
