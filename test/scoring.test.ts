@@ -92,6 +92,11 @@ test('sets and runs', () => {
     expect(scoreSetsAndRuns(game.all(Card))).toBe(0);
     card6.value = 5;
     expect(scoreSetsAndRuns(game.all(Card))).toBe(2);
+    card3.value = 4;
+    card2.value = 6;
+    card5.value = 2;
+    card6.value = 2;
+    expect(scoreSetsAndRuns(game.all(Card))).toBe(2);
 });
 
 
