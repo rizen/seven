@@ -15,45 +15,53 @@ test('allows you to take turns', () => {
     settings: {}
   });
 
+
+  console.log('player 1 stuff', p1);
+  console.log('player 2 stuff', p1);
+
   expect(runner.server.game.round).toBe(7);
 
-  //console.log(runner.server.game.players.current())
 
-  // the next 2 lines shouldn't be right, but bz thinks they are, there should be an action for player 1
   expect(p1.actions()).toStrictEqual(['discardCard'])
   expect(p2.actions()).toStrictEqual(['discardCard'])
 
-  // no idea what to do below given what's happening above
-  /*
-    p1.move('discardCard', {
-      card: p1.game.first('hand')!.last(Card)!
-    });
-  
-    expect(ui1.actions()).toStrictEqual([])
-    expect(ui2.actions()).toStrictEqual(['take'])
-  
-    ui2.move('take', {
-      token: ui2.game.first('pool')!.first(Token)!
-    });
-  
-    expect(ui2.game.getWinners()).toStrictEqual([ui2.player])
-  })
-  
-  test("doesn't allow one player to play twice", () => {
-    const [ui1, ui2] = runner.start({
-      players: 2,
-      settings: { tokens: 4 }
-    });
-  
-    expect(ui1.actions()).toStrictEqual(['take'])
-    expect(ui2.actions()).toStrictEqual([])
-  
-    ui1.move('take', {
-      token: ui1.game.first('pool')!.last(Token)!
-    });
-  
-    expect(() => ui1.move('take', {
-      token: ui1.game.first('pool')!.last(Token)!
-    })).toThrowError()
-    */
+  console.log('p1 hand', p1.player.my('hand')?.all(Card).map(card => card.name))
+  p1.move('discardCard', {
+    //@ts-ignore
+    card: p1.player.my('hand')!.last(Card)!
+  });
+
+  expect(p1.actions()).toStrictEqual([])
+  expect(p2.actions()).toStrictEqual(['discardCard'])
+
+  console.log('p2 hand', p1.player.my('hand')?.all(Card).map(card => card.name))
+  p2.move('discardCard', {
+    //@ts-ignore
+    card: p1.player.my('hand')!.last(Card)!
+  });
+
+
+  //expect(p1.actions()).toStrictEqual(['discardDown'])
+  // expect(p2.actions()).toStrictEqual(['discardDown'])
+
+
 })
+/*
+test("doesn't allow one player to play twice", () => {
+  const [ui1, ui2] = runner.start({
+    players: 2,
+    settings: { tokens: 4 }
+  });
+
+  expect(ui1.actions()).toStrictEqual(['take'])
+  expect(ui2.actions()).toStrictEqual([])
+
+  ui1.move('take', {
+    token: ui1.game.first('pool')!.last(Token)!
+  });
+
+  expect(() => ui1.move('take', {
+    token: ui1.game.first('pool')!.last(Token)!
+  })).toThrowError()
+})
+    */
