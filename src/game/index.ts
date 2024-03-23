@@ -31,7 +31,6 @@ export default createGame(SevenPlayer, MyGame, game => {
 
   game.registerClasses(Card);
 
-  game.create(Space, 'scoreboard');
   game.create(Space, 'mess');
   $.mess.onEnter(Card, t => t.hideFromAll());
   for (const card of cards) {
@@ -46,6 +45,7 @@ export default createGame(SevenPlayer, MyGame, game => {
     });
     const discard = game.create(Space, 'discard', { player });
     discard.onEnter(Card, c => c.showToAll());
+    game.create(Space, 'scoreboard', { player });
   }
 
   game.defineActions({

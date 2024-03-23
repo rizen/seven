@@ -1,5 +1,12 @@
 #play-area {
 
+
+    .scoreHeader {
+        display: flex;
+        align-items: flex-start;
+        font-size: 1rem;
+    }
+
     .Card {
 
         perspective: 1000px;
