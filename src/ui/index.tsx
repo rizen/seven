@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, ProfileBadge } from '@boardzilla/core';
 import { default as setup, Card, Space, Reference } from '../game/index.js';
-import uuid from 'uuid-random';
 
 import './style.scss';
 import '@boardzilla/core/index.css';
@@ -21,10 +20,6 @@ render(setup, {
     game.showLayoutBoundingBoxes();
     game.disableDefaultAppearance();
 
-
-
-
-
     if (boardSize === 'desktop') {
 
       game.layout('hand', {
@@ -39,7 +34,6 @@ render(setup, {
       });
 
     } // end mobile
-
 
     game.all('hand').layout(Card, {
       columns: 6,
@@ -60,7 +54,6 @@ render(setup, {
       alignment: 'bottom left',
     });
 
-
     game.layout('scoreboard', {
       area: { left: 80, top: 0, width: 20, height: 100 },
       columns: 1,
@@ -77,7 +70,6 @@ render(setup, {
         </div>
       )
     });
-
 
     game.layout('refdrawer', {
       area: {
