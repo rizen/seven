@@ -102,7 +102,7 @@ render(setup, {
       element: game,
       top: 0,
       left: 0,
-      width: 80
+      width: 80,
     });
 
   }
