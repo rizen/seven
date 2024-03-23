@@ -17,7 +17,7 @@ render(setup, {
   settings: {
   },
   layout: (game, _player, boardSize) => {
-    game.showLayoutBoundingBoxes();
+    //game.showLayoutBoundingBoxes();
     game.disableDefaultAppearance();
 
     if (boardSize === 'desktop') {
