@@ -24,13 +24,17 @@ export class Card extends Piece {
   quantity: number
 }
 
+export class Reference extends Piece { }
+
 export default createGame(SevenPlayer, MyGame, game => {
 
   const { action } = game;
   const { playerActions, loop, everyPlayer, whileLoop } = game.flowCommands;
 
-  game.registerClasses(Card);
+  game.registerClasses(Card, Reference);
 
+  game.create(Space, 'refdrawer');
+  $.refdrawer.create(Reference, 'scorecard');
   game.create(Space, 'mess');
   $.mess.onEnter(Card, t => t.hideFromAll());
   for (const card of cards) {

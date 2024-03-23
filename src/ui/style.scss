@@ -12,6 +12,14 @@
         font-size: 1rem;
     }
 
+    .Reference {
+        background-size: cover;
+
+        &[data-name="scorecard"] {
+            background-image: url("./assets/score_-_white[all,7].png");
+        }
+    }
+
     .Card {
 
         perspective: 1000px;
