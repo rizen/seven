@@ -73,10 +73,10 @@ test('allows you to take turns', () => {
     cards: p2.player.my('hand')!.firstN(3, Card)!
   });
 
-  expect(p2.player.my('hand')?.all(Card).length).toBe(3);
+  expect(p2.player.my('hand')?.all(Card).length).toBe(5);
 
-  expect(p1.actions()).toStrictEqual(['discardDown'])
-  expect(p2.actions()).toStrictEqual(['discardDown'])
+  expect(p1.actions()).toStrictEqual(['discardCard'])
+  expect(p2.actions()).toStrictEqual(['discardCard'])
 
 
 });

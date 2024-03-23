@@ -122,6 +122,7 @@ export default createGame(SevenPlayer, MyGame, game => {
             player.my('discard')!.all().putInto($.mess);
           }
           game.match++
+          game.round = 0;
         }
       ]
     }),
