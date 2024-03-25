@@ -7,7 +7,7 @@ import {
 import { cards } from './cards.js';
 import { scorePlayer } from './scoring.js';
 
-export class SevenPlayer extends Player<MyGame, SevenPlayer> {
+export class SevenPlayer extends Player<MyGame> {
   score = 0;
 };
 
@@ -17,13 +17,13 @@ export class MyGame extends Game<MyGame, SevenPlayer> {
 }
 
 
-export class Card extends Piece<MyGame, SevenPlayer> {
+export class Card extends Piece<MyGame> {
   color: 'purple' | 'blue' | 'red' | 'green' | 'black'
   value: 1 | 2 | 3 | 4 | 5 | 6 | 7 | '+1'
   quantity: number
 }
 
-export class Reference extends Piece<MyGame, SevenPlayer> { }
+export class Reference extends Piece<MyGame> { }
 
 export default createGame(SevenPlayer, MyGame, game => {
 

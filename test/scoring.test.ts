@@ -1,12 +1,11 @@
 import { expect, test, beforeEach } from 'vitest'
 import { scoreRunOf7In1Color, scoreSetOf7, score7Card1Color, scoreSetOf5AndSetOf2, scoreRunOf7, scoreSetsAndRuns, scoreEvenOrOdd } from '../src/game/scoring.js';
-import { MyGame, Space, Card } from '../src/game/index.js';
+import { MyGame, Card } from '../src/game/index.js';
+import { Space } from '@boardzilla/core';
 
-//@ts-ignore
 let game: MyGame;
 
 beforeEach(() => {
-    //@ts-ignore
     game = new MyGame({ classRegistry: [Space, Card] });
 });
 
