@@ -1,37 +1,34 @@
 import {
   createGame,
-  createGameClasses,
   Player,
   Game,
+  Space, Piece,
 } from '@boardzilla/core';
 import { cards } from './cards.js';
 import { scorePlayer } from './scoring.js';
 
-export class SevenPlayer extends Player<SevenPlayer, MyGame> {
+export class SevenPlayer extends Player<MyGame, SevenPlayer> {
   score = 0;
 };
 
-export class MyGame extends Game<SevenPlayer, MyGame> {
+export class MyGame extends Game<MyGame, SevenPlayer> {
   round = 1;
   match = 1;
 }
 
-export const { Space, Piece } = createGameClasses<SevenPlayer, MyGame>();
 
-export class Card extends Piece {
+export class Card extends Piece<MyGame, SevenPlayer> {
   color: 'purple' | 'blue' | 'red' | 'green' | 'black'
   value: 1 | 2 | 3 | 4 | 5 | 6 | 7 | '+1'
   quantity: number
 }
 
-export class Reference extends Piece { }
+export class Reference extends Piece<MyGame, SevenPlayer> { }
 
 export default createGame(SevenPlayer, MyGame, game => {
 
   const { action } = game;
   const { playerActions, loop, everyPlayer, whileLoop } = game.flowCommands;
-
-  game.registerClasses(Card, Reference);
 
   game.create(Space, 'refdrawer');
   $.refdrawer.create(Reference, 'scorecard');

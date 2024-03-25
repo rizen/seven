@@ -3,8 +3,7 @@ import { TestRunner } from "@boardzilla/core";
 import { MyGame, SevenPlayer, Card, default as setup } from '../src/game/index.js';
 import { scorePlayer } from '../src/game/scoring.js';
 
-//@ts-ignore
-let runner: TestRunner<SevenPlayer, MyGame>;
+let runner: TestRunner<MyGame>;
 
 beforeEach(() => {
   runner = new TestRunner(setup);

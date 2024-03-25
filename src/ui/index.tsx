@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, ProfileBadge } from '@boardzilla/core';
-import { default as setup, Card, Space, Reference } from '../game/index.js';
+import { render, ProfileBadge, Space } from '@boardzilla/core';
+import { default as setup, Card, Reference } from '../game/index.js';
 
 import './style.scss';
 import '@boardzilla/core/index.css';
